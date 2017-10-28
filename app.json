@@ -1,4 +1,5 @@
 {
-  "name": "ReactNativeSeed",
-  "displayName": "ReactNativeSeed"
+  "expo": {
+    "sdkVersion": "22.0.0"
+  }
 }
