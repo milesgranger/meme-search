@@ -5,6 +5,8 @@ __pycache__/
 
 # C extensions
 *.so
+.idea/
+
 
 # Distribution / packaging
 .Python
@@ -99,3 +101,32 @@ ENV/
 
 # mypy
 .mypy_cache/
+App.js
+ChangeLog.md
+LICENSE
+android/
+app.json
+assets/
+flow-typed/
+index.android.js
+index.ios.js
+ios/
+jsconfig.json
+package.json
+src/
+yarn.lock
+!/App.js
+!/app.json
+!/ChangeLog.md
+!/index.android.js
+!/index.ios.js
+!/jsconfig.json
+!/LICENSE
+!/package.json
+!/yarn.lock
+!/src/
+!/ios/
+!/flow-typed/
+!/assets/
+!/android/
+/node_modules/
