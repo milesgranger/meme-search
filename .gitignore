@@ -133,3 +133,15 @@ yarn.lock
 .expo/
 App.test.js
 !/.expo/
+mobile/
+server/
+!/mobile/.expo/
+/mobile/node_modules/
+!/mobile/
+!/mobile/components/
+!/mobile/App.js
+!/mobile/app.json
+!/mobile/App.test.js
+!/mobile/package.json
+!/mobile/README.md
+!/server/
