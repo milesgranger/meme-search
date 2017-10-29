@@ -1,11 +1,11 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
 
 @app.route('/')
 def index():
-    return jsonify({'data': 'hello from server!'})
+    return jsonify({'data': request.args.to_dict()})
 
 
 if __name__ == '__main__':

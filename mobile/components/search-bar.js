@@ -9,7 +9,7 @@ export default class Search extends React.Component {
 
     render() {
         return (
-            <SearchBar round style={this.props.style} placeholder='Search for Memes...' />
+            <SearchBar onChangeText={this.props.onSearchChange} round style={this.props.style} placeholder='Search for Memes...' />
         );
     }
 }
