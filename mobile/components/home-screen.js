@@ -30,6 +30,9 @@ export default class HomeScreen extends React.Component {
     }
 
     handleSearchChange(search) {
+        /*
+        *   Handle contacting server to search for memes based on current entry
+        * */
         console.log(search);
         axios.get('http://192.168.100.9:5556/api-v1/', {params: {'search-term': search}})
             .then((response) => {
@@ -44,10 +47,12 @@ export default class HomeScreen extends React.Component {
 
         return (
             <View style={{flex: 1}}>
+
                 <View style={{flex: 0.5, paddingTop: '8%'}}>
                     <Text>{!this.state.currentSearch ? '' : 'Searching for: ' + this.state.currentSearch} </Text>
                     <Search handleSearchChange={this.handleSearchChange}/>
                 </View>
+
                 <View style={{flex: 2, flexDirection: 'row'}}>
                     {
                         this.state.searchResults.map((result, i) => {
