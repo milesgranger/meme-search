@@ -1,13 +1,17 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Dimensions, Text, View } from 'react-native';
 import MainMenu from './components/home';
+
+
+const SCREEN_WIDTH = Dimensions.get('window').width;
+
 
 export default class App extends React.Component {
 
     render() {
         return (
             <View style={styles.container}>
-                <MainMenu style={styles.intro}/>
+                <MainMenu />
             </View>
         );
     }
@@ -21,10 +25,8 @@ const styles = StyleSheet.create({
 
     },
     container: {
-        marginTop: '20%',
-        marginLeft: '10%',
-        marginRight: '10%',
-        backgroundColor: '#fff',
+        flex: 1,
+        backgroundColor: '#ffff',
         justifyContent: 'center'
     },
 });
