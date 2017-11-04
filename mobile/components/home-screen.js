@@ -5,7 +5,11 @@ import axios from 'axios';
 import Meme from './meme';
 import Search from './search-bar';
 
-export default class MainMenu extends React.Component {
+export default class HomeScreen extends React.Component {
+
+    static navigationOptions = {
+        title: 'MemeSearch - Home'
+    };
 
     constructor(props) {
         super(props);
@@ -51,9 +55,9 @@ export default class MainMenu extends React.Component {
                                 <Meme
                                     key={i}
                                     xlarge
-                                    onPress={() => console.log('Meme working!!')}
                                     activeOpacity={0.7}
                                     source={{uri: result.location}}
+                                    {...this.props}
                                 />
                             )
                         })
@@ -65,7 +69,7 @@ export default class MainMenu extends React.Component {
 }
 
 
-MainMenu.defaultProps = {
+HomeScreen.defaultProps = {
     titleText: 'Default Main Menus'
 };
 
