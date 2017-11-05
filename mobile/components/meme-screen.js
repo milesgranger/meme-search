@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Dimensions, CameraRoll, Platform, Alert} from 'react-native';
 import {Button} from 'react-native-elements';
 import RNFetchBlob from 'react-native-fetch-blob';
+import Share from 'react-native-share';
 
 import Meme from './meme';
 
@@ -18,6 +19,7 @@ export default class MemeScreen extends React.Component {
         this.state = {};
         this.handleShareButton = this.handleShareButton.bind(this);
         this.saveToCameraRoll = this.saveToCameraRoll.bind(this);
+        this.shareMeme = this.shareMeme.bind(this);
     };
 
     handleShareButton(){
@@ -29,7 +31,31 @@ export default class MemeScreen extends React.Component {
 
     }
 
+    shareMeme(path) {
+        /*
+        *   Share the meme.
+        *   path: location of the downloaded Meme on camera roll
+        * */
+        RNFetchBlob.fs.readFile(path, 'base64')
+            .then((data) => {
+                let shareOptions = {
+                    title: 'Meme-Search',
+                    message: 'Sent via Meme-Search',
+                    url: `data:image/jpg;base64,${data}`,
+                    subject: ''
+                };
+                Share.open(shareOptions)
+                    .then((res) => console.log('res: ' + res))
+                    .catch(err => console.log('err: ' + err))
+            })
+            .catch(err => console.log('Error reading saved meme: ' + err + '-- Located at path: ' + path))
+    }
+
     saveToCameraRoll(image_url){
+        /*
+        *   Handle downloading a remote image to camera roll
+        *   image_url: Absolute http url to an image
+        * */
         if (Platform.OS === 'android'){
             console.log('Running download image for android...');
             RNFetchBlob
@@ -41,12 +67,16 @@ export default class MemeScreen extends React.Component {
                 .then((res) => {
                     console.log('Got image: ' + res);
                     CameraRoll.saveToCameraRoll(res.path(), 'photo')
-                        .then(Alert.alert('Success', 'Photo added to camera roll'))
+                        .then((save_result) => {
+                            console.log('Save result: ' + save_result.toString() + ' -- Path: ' + res.path());
+                            this.shareMeme(res.path());
+                        })
                         .catch(err => console.log('Error saving file: ', err))
                 })
                 .catch(err => console.log('Err downloading remote image: ' + err.toString()))
         } else {
-            CameraRoll.saveToCameraRoll(image_url)
+            console.log('Running download image for ios...');
+            CameraRoll.saveToCameraRoll(image_url, 'photo')
                 .then(Alert.alert('Success', 'Photo added to camera roll!'))
                 .catch(err => console.log('Error with IoS saving image: ' + err.toString()))
         }
