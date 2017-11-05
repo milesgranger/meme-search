@@ -10,6 +10,7 @@ import {StackNavigator} from 'react-navigation';
 
 import HomeScreen from './components/home-screen';
 import MemeScreen from './components/meme-screen';
+import UploadScreen from './components/upload-screen';
 
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -20,6 +21,9 @@ const App = StackNavigator({
     },
     MemeScreen: {
         screen: MemeScreen,
+    },
+    UploadScreen: {
+        screen: UploadScreen,
     }
 
 });

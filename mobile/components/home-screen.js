@@ -1,6 +1,7 @@
 import React from 'react';
 import {Text, View} from 'react-native';
 import axios from 'axios';
+import {Button} from 'react-native-elements';
 
 import Meme from './meme';
 import Search from './search-bar';
@@ -26,7 +27,11 @@ export default class HomeScreen extends React.Component {
         */
         axios.get('http://192.168.100.9:5556')
             .then((response) => console.log(response.data))
-            .catch((err) => console.log('Error contacting meme_search_server: ' + err.toString()))
+            .catch((err) => console.log('Error contacting meme_search_server: ' + err.toString()));
+
+        // TODO: Remove this after done making upload screen
+        let {navigate} = this.props.navigation;
+        navigate('UploadScreen');
     }
 
     handleSearchChange(search) {
@@ -45,12 +50,15 @@ export default class HomeScreen extends React.Component {
 
     render() {
 
+        let {navigate} = this.props.navigation;
+
         return (
             <View style={{flex: 1}}>
 
                 <View style={{flex: 0.5, paddingTop: '8%'}}>
                     <Text>{!this.state.currentSearch ? '' : 'Searching for: ' + this.state.currentSearch} </Text>
                     <Search handleSearchChange={this.handleSearchChange}/>
+                    <Button containerViewStyle={{marginTop: '1%'}} title='Upload a Meme' onPress={() => navigate('UploadScreen')}/>
                 </View>
 
                 <View style={{flex: 2, flexDirection: 'row'}}>

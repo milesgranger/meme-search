@@ -18,7 +18,7 @@ export default class MemeScreen extends React.Component {
         super(props);
         this.state = {};
         this.handleShareButton = this.handleShareButton.bind(this);
-        this.saveToCameraRoll = this.saveToCameraRoll.bind(this);
+        this.saveToCameraRollAndShare = this.saveToCameraRollAndShare.bind(this);
         this.shareMeme = this.shareMeme.bind(this);
     };
 
@@ -26,9 +26,8 @@ export default class MemeScreen extends React.Component {
         /*
         *   Download this meme to CameraRoll and share
         * */
-        console.log('downloading image from: ' + this.props.navigation.state.params.source.uri);
-        this.saveToCameraRoll(this.props.navigation.state.params.source.uri);
-
+        console.log('Downloading image from: ' + this.props.navigation.state.params.source.uri);
+        this.saveToCameraRollAndShare(this.props.navigation.state.params.source.uri);
     }
 
     shareMeme(path) {
@@ -51,35 +50,27 @@ export default class MemeScreen extends React.Component {
             .catch(err => console.log('Error reading saved meme: ' + err + '-- Located at path: ' + path))
     }
 
-    saveToCameraRoll(image_url){
+    saveToCameraRollAndShare(image_url){
         /*
         *   Handle downloading a remote image to camera roll
         *   image_url: Absolute http url to an image
         * */
-        if (Platform.OS === 'android'){
-            console.log('Running download image for android...');
-            RNFetchBlob
-                .config({
-                    fileCache: true,
-                    appendExt: 'jpg'
-                })
-                .fetch('GET', image_url)
-                .then((res) => {
-                    console.log('Got image: ' + res);
-                    CameraRoll.saveToCameraRoll(res.path(), 'photo')
-                        .then((save_result) => {
-                            console.log('Save result: ' + save_result.toString() + ' -- Path: ' + res.path());
-                            this.shareMeme(res.path());
-                        })
-                        .catch(err => console.log('Error saving file: ', err))
-                })
-                .catch(err => console.log('Err downloading remote image: ' + err.toString()))
-        } else {
-            console.log('Running download image for ios...');
-            CameraRoll.saveToCameraRoll(image_url, 'photo')
-                .then(Alert.alert('Success', 'Photo added to camera roll!'))
-                .catch(err => console.log('Error with IoS saving image: ' + err.toString()))
-        }
+        RNFetchBlob
+            .config({
+                fileCache: true,
+                appendExt: 'jpg'
+            })
+            .fetch('GET', image_url)
+            .then((res) => {
+                console.log('Got image: ' + res);
+                CameraRoll.saveToCameraRoll(res.path(), 'photo')
+                    .then((save_result) => {
+                        console.log('Save result: ' + save_result.toString() + ' -- Path: ' + res.path());
+                        this.shareMeme(res.path());
+                    })
+                    .catch(err => console.log('Error saving file: ', err))
+            })
+            .catch(err => console.log('Err downloading remote image: ' + err.toString()))
     }
 
     render(){
