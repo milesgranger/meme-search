@@ -36,8 +36,6 @@ export default class UploadScreen extends React.Component {
         };
 
         ImagePicker.showImagePicker(options, (response) => {
-            console.log('Response from image selection: ' + response);
-
             if (response.didCancel) {
                 console.log('User canncelled image selection');
             }
@@ -72,42 +70,74 @@ export default class UploadScreen extends React.Component {
     }
 
     handleTagRemoval(key){
-        console.log('Handling tag removal using key: ' + key);
-        this.setState({imageTags: this.state.imageTags.splice(this.state.imageTags.indexOf(key), 1)});
+        /*
+        *   Key is inside of state.imageTags, remove it.
+        *   Occurs when user taps an element containing a previously entered tag
+        * */
+        let tags = this.state.imageTags;
+        tags.splice(tags.indexOf(key), 1);
+        this.setState({imageTags: tags});
     }
 
     render(){
         return (
             <View style={{flex: 1, alignItems: 'center', marginTop: '15%'}}>
                 {
+                    // Show Selected image if available, otherwise button to select an image
                     this.state.selectedImageUri ?
                         <View>
                             <Avatar
                                 xlarge
                                 source={{uri: this.state.selectedImageUri}}
-                                onLongPress={() => this.setState({selectedImageUri: null, selectedImageData: null})}
+                                onLongPress={() => this.setState({selectedImageUri: null, selectedImageData: null, imageTags: []})}
                             />
-                            <Text>Press and hold image to cancel...</Text>
+                            <Text>Press & hold to cancel...</Text>
                         </View>
                         :
                         <Button containerViewStyle={{flex: 1}} title='Select a Photo' onPress={this.handleImageSelection}/>
                 }
                 <View style={{flex: 2}}>
+                    {this.state.imageTags.length ? <Text>Tap to remove a tag</Text> : null}
+                    <View style={{flex: 1, flexDirection: 'row', flexWrap: 'wrap'}}>
                     {
+                        // Show meme tags as tappable components, if tapped, remove from displayed tags
                         this.state.imageTags ?
                             this.state.imageTags.map((tag, i) => {
                                 return(
-                                        <Badge key={i} onPress={() => this.handleTagRemoval(tag)}>
-                                            <Text>{tag}</Text>
+                                        <Badge containerStyle={{marginBottom: '1%', backgroundColor: 'white'}} key={i} onPress={() => this.handleTagRemoval(tag)}>
+                                            <Text>"{tag}"</Text>
                                         </Badge>
                                     )
-
                             })
                             :
                             null
                     }
-                    <FormLabel>Meme Tags</FormLabel>
-                    <FormInput value={this.state.tagInputValue} placeholder='Enter tags separated by commas' onChangeText={this.handleTagInputChange} />
+                    </View>
+
+                    {
+                        // Show form to add tags and upload only if image has been selected
+                        this.state.selectedImageUri ?
+                            <View style={{flex: 4}}>
+                                <FormLabel>Meme Tags</FormLabel>
+                                <Button
+                                    title={ this.state.imageTags.length > 2 ? 'Upload to Meme-Search!' : 'Add more tags before uploading...'}
+                                    disabled={this.state.imageTags.length < 3}
+                                    buttonStyle={{backgroundColor: 'green'}}
+                                    rounded
+                                    onPress={() => console.log('Uploading to server!')}
+                                />
+                                <FormInput
+                                    inputStyle={{ backgroundColor: 'white'}}
+                                    value={this.state.tagInputValue}
+                                    placeholder='Enter tags separated by commas'
+                                    onChangeText={this.handleTagInputChange}
+                                />
+                            </View>
+                            :
+                            null
+                    }
+
+
                 </View>
             </View>
         )
