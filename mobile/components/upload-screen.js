@@ -7,8 +7,6 @@ import {
 import { Button, Avatar, FormLabel, FormInput, Badge } from 'react-native-elements';
 import ImagePicker from 'react-native-image-picker';
 
-import futch from './upload-image';
-
 
 export default class UploadScreen extends React.Component {
 
@@ -52,7 +50,8 @@ export default class UploadScreen extends React.Component {
                     selectedImageData: response.data,
                     selectedImageUri: response.uri,
                     selectedImageName: response.fileName,
-                    tagInputValue: '' // Current input in the tag section
+                    tagInputValue: '', // Current input in the tag section
+                    uploadProgressPctComplete: 0
                 })
             }
         })
@@ -91,24 +90,65 @@ export default class UploadScreen extends React.Component {
         this.setState({imageTags: tags});
     }
 
+    inferImageType = (filename) => {
+        let fileEnding = filename.split('.').pop();
+        switch (fileEnding.toLowerCase().trim()) {
+            case 'jpg':
+                return 'image/jpg';
+            case 'jpeg':
+                return 'image/jpeg';
+            case 'png':
+                return 'image/png';
+            case 'bmp':
+                return 'image/bmp';
+            default:
+                return 'image/jpeg';
+        }
+    };
+
     handleUpload(){
         console.log('Starting upload with file: ' + this.state.selectedImageUri);
-        const data = new FormData();
-        data.append('meme', {
+
+        const xhr = new XMLHttpRequest();
+
+        // Update user progress
+        xhr.upload.addEventListener("progress", (evt) => {
+            if (evt.lengthComputable) {
+                let percentComplete = parseInt((evt.loaded / evt.total) * 100);
+                console.log('Percent uploaded: ' + percentComplete);
+                this.setState({uploadProgressPctComplete: percentComplete});
+            }
+        });
+
+        // Define uploading endpoint & image to send
+        xhr.open('POST', 'http://192.168.100.9:5556/api-v1/', true);
+        let postData = new FormData();
+        postData.append('meme', {
             uri: this.state.selectedImageUri,
-            type: 'image/jpeg',
+            type: this.inferImageType(this.state.selectedImageName),
             name: this.state.selectedImageName
         });
 
-        futch('http://192.168.100.9:5556/api-v1/', {
-            method: 'post',
-            body: data,
-        }, (progressEvent) => {
-            const progress = progressEvent.loaded / progressEvent.total;
-            console.log('Upload progress: ' + progress);
-        })
-            .then((res)=> console.log('This is the result of uploading: ' + res))
-            .catch((err) => console.log('Error uploading image: ' + err))
+        // Define what to do on success or failure
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200 || xhr.status === 204) {
+                    console.log('Successfully uploaded entire image!');
+                }
+                else if (xhr.status === 415) {
+                    console.log('Expected either a JPG or PNG type image');
+                }
+                else if (xhr.status === 400) {
+                    console.log('This error indicates the postData is not in compliance.');
+                }
+                else {
+                    console.log('Error in processing upload, response from server was: ' + xhr.status)
+                }
+            }
+        };
+
+        // Launch uploading!
+        xhr.send(postData);
     }
 
     render(){
@@ -117,8 +157,17 @@ export default class UploadScreen extends React.Component {
 
             <View style={{flex: 1, alignItems: 'center', backgroundColor: '#e6e8ed'}}>
 
+                {
+                    // Uploading status
+                    this.state.uploadProgressPctComplete ?
+                        <Text style={{color: 'green', paddingTop: '5%'}}>
+                            {'Uploading: ' + this.state.uploadProgressPctComplete + '% complete...'}
+                        </Text>
+                        :
+                        null
+                }
 
-                <View style={{marginTop: '15%'}}>
+                <View style={{marginTop: '10%'}}>
                 {
                     // Show Selected image if available, otherwise button to select an image
                     this.state.selectedImageUri ?
@@ -165,10 +214,11 @@ export default class UploadScreen extends React.Component {
                                     disabled={this.state.imageTags.length < 3}
                                     buttonStyle={{backgroundColor: '#528ff2'}}
                                     rounded
+                                    containerViewStyle={{marginBottom: '5%'}}
                                     onPress={this.handleUpload}
                                 />
                                 <FormInput
-                                    inputStyle={{ backgroundColor: 'white'}}
+                                    inputStyle={{ backgroundColor: 'white', borderRadius: 15}}
                                     value={this.state.tagInputValue}
                                     placeholder='Enter tags separated by commas'
                                     onChangeText={this.handleTagInputChange}

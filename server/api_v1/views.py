@@ -18,9 +18,17 @@ class MemeSearchAPI(MethodView):
 
         # check if
         if 'meme' not in request.files:
-            abort(500)
+            abort(400, 'Invalid post data given')
 
+        # Get the file
         file = request.files['meme']
+
+        # Ensure it is JPG or PNG image type
+        if not any([lambda file_type: file.filename.lower().endswith(file_type)
+                    for file_type in ['jpg', 'png', 'jpeg', 'bmp']
+                    ]):
+            abort(415, 'Can only accept JPG and PNG image types.')
+
         file.save('/workdir/{}'.format(file.filename))
 
         return 'server ack upload'
