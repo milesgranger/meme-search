@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import current_app, jsonify
+from flask import current_app, jsonify, request, abort
 from flask.blueprints import Blueprint
 from flask.views import MethodView
 
@@ -12,7 +12,18 @@ class MemeSearchAPI(MethodView):
     Interface to the MemeSearch API
     """
 
-    methods = ['GET']
+    methods = ['GET', 'POST']
+
+    def post(self):
+
+        # check if
+        if 'meme' not in request.files:
+            abort(500)
+
+        file = request.files['meme']
+        file.save('/workdir/{}'.format(file.filename))
+
+        return 'server ack upload'
 
     def get(self):
         """

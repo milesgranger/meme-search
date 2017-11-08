@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+
+  webserver.io:
+    build:
+      dockerfile: ./server/docker/Dockerfile
+      context: .
+    image: milesg/meme-search-webserver:0.0.1
+
+    ports:
+      - 5556:5556
+    volumes:
+      - ./:/workdir
+    command: ['python', 'server/app.py']
