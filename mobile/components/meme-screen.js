@@ -11,7 +11,7 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 export default class MemeScreen extends React.Component {
 
     static navigationOptions = {
-        title: 'Single Meme View'
+        title: 'Share Meme'
     };
 
     constructor(props){
@@ -41,7 +41,7 @@ export default class MemeScreen extends React.Component {
                     title: 'Meme-Search',
                     message: 'Sent via Meme-Search',
                     url: `data:image/jpg;base64,${data}`,
-                    subject: ''
+                    subject: 'sent using Meme-Search'
                 };
                 Share.open(shareOptions)
                     .then((res) => console.log('res: ' + res))
@@ -76,7 +76,7 @@ export default class MemeScreen extends React.Component {
     render(){
         return (
             <View style={{flex: 1}}>
-                <View style={{flex: 4}}>
+                <View style={{flex: 3}}>
                     <Meme
                         width={SCREEN_WIDTH}
                         {...this.props.navigation.state.params}
@@ -84,7 +84,8 @@ export default class MemeScreen extends React.Component {
                 </View>
                 <View style={{flex: 1, paddingTop: 5}}>
                     <Button
-                        raised
+                        rounded
+                        buttonStyle={{backgroundColor: '#528ff2'}}
                         onPress={this.handleShareButton}
                         title={'Share Meme'}
                     />

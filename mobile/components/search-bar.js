@@ -11,7 +11,13 @@ export default class Search extends React.Component {
     render() {
         return (
             <View>
-                <SearchBar onChangeText={this.props.handleSearchChange} round placeholder='Search for Memes...' />
+                <SearchBar
+                    clearIcon
+                    round
+                    onChangeText={this.props.handleSearchChange}
+                    placeholder='Search for Memes...'
+                    {...this.props}
+                />
             </View>
         );
     }

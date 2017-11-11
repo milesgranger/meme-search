@@ -38,7 +38,8 @@ class MemeSearchAPI(MethodView):
         """
         Process a standard search get request
         """
-        meme_icons = MemeSearch(es=ES).get_memes(index='memes', query='crazy')
+        query = request.args.get('query')
+        meme_icons = MemeSearch(es=ES).get_memes(index='memes', query=query)
         return jsonify(meme_icons)
 
 

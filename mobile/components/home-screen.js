@@ -1,15 +1,16 @@
 import React from 'react';
-import {Text, View} from 'react-native';
 import axios from 'axios';
-import {Button} from 'react-native-elements';
+import { Text, View } from 'react-native';
+import { Button } from 'react-native-elements';
 
 import Meme from './meme';
 import Search from './search-bar';
 
+
 export default class HomeScreen extends React.Component {
 
     static navigationOptions = {
-        title: 'MemeSearch - Home'
+        title: 'Meme-Search.io - Tell a friend :)'
     };
 
     constructor(props) {
@@ -30,8 +31,8 @@ export default class HomeScreen extends React.Component {
             .catch((err) => console.log('Error contacting meme_search_server: ' + err.toString()));
 
         // TODO: Remove this after done making upload screen
-        let {navigate} = this.props.navigation;
-        navigate('UploadScreen');
+        //let {navigate} = this.props.navigation;
+        //navigate('UploadScreen');
     }
 
     handleSearchChange(search) {
@@ -39,7 +40,7 @@ export default class HomeScreen extends React.Component {
         *   Handle contacting server to search for memes based on current entry
         * */
         console.log(search);
-        axios.get('http://192.168.100.9:5556/api-v1/', {params: {'search-term': search}})
+        axios.get('http://192.168.100.9:5556/api-v1/', {params: {'query': search}})
             .then((response) => {
                 console.log(response.data);
                 this.setState({searchResults: response.data});
@@ -55,13 +56,37 @@ export default class HomeScreen extends React.Component {
         return (
             <View style={{flex: 1}}>
 
+                {/* View containing the search and button for uploading a meme */}
                 <View style={{flex: 0.5, paddingTop: '8%'}}>
-                    <Text>{!this.state.currentSearch ? '' : 'Searching for: ' + this.state.currentSearch} </Text>
+
+                    {/* Display message if current search doesn't yield any results */}
+                    <Text>
+                        {
+                            this.state.currentSearch && !this.state.searchResults.length ?
+                                'No results for: ' + this.state.currentSearch
+                                :
+                                ''
+                        }
+                    </Text>
+
+                    {/* Search bar - Hide button for uploading if user has typed anything in search bar */}
                     <Search handleSearchChange={this.handleSearchChange}/>
-                    <Button containerViewStyle={{marginTop: '1%'}} title='Upload a Meme' onPress={() => navigate('UploadScreen')}/>
+                    {
+                        this.state.currentSearch ?
+                            null
+                            :
+                            <Button
+                                rounded
+                                buttonStyle={{backgroundColor: '#528ff2'}}
+                                containerViewStyle={{marginTop: '1%'}}
+                                title='Upload a Meme'
+                                onPress={() => navigate('UploadScreen')}
+                            />
+                    }
                 </View>
 
-                <View style={{flex: 2, flexDirection: 'row'}}>
+                {/* view containing resulting memes based on search */}
+                <View style={{flex: 2, flexDirection: 'row', flexWrap: 'wrap'}}>
                     {
                         this.state.searchResults.map((result, i) => {
                             return (
@@ -76,6 +101,7 @@ export default class HomeScreen extends React.Component {
                         })
                     }
                 </View>
+
             </View>
         );
     }
