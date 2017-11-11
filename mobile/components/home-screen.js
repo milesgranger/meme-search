@@ -69,7 +69,7 @@ export default class HomeScreen extends React.Component {
                                     key={i}
                                     xlarge
                                     activeOpacity={0.7}
-                                    source={{uri: result.location}}
+                                    source={{uri: result.meme_url}}
                                     {...this.props}
                                 />
                             )
