@@ -7,9 +7,21 @@ services:
       dockerfile: ./server/docker/Dockerfile
       context: .
     image: milesg/meme-search-webserver:0.0.1
-
+    container_name: webserver.io
+    links:
+      - elasticsearch.io
     ports:
       - 5556:5556
     volumes:
       - ./:/workdir
+    environment:
+      - ELASTICSEARCH_HOST=elasticsearch.io
+      - DEBUG=1
     command: ['python', 'server/app.py']
+
+
+  elasticsearch.io:
+    image: elasticsearch:5.6
+    ports:
+      - 9200:9200
+      - 9300:9300
