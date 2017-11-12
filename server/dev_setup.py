@@ -15,26 +15,52 @@ class SetupElasticSearch:
     >>> SetupElasticSearch.setup(es=Elasticsearch(hosts=[...]))
     """
     memes = [
-        {'meme_id': 'meme-{}'.format(random.randint(0, 100000)),
-         'meme_url': 'https://media1.popsugar-assets.com/files/thumbor/Jd4nQ83myp6U6gWLzHV8aCkp6Lo/fit-in/1024x1024/filters:format_auto-!!-:strip_icc-!!-/2015/07/30/615/n/1922153/6f32db66ead6ded2_Screen_Shot_2015-07-29_at_5.21.10_PM/i/Funny-Beauty-Memes.png',
-         'meme_tags': 'sad, horrible, too bad'
+        {'meme_id': 'meme1.jpg',
+         'meme_tags': 'tag, hilarious, oh no, crazy'
          },
-        {'meme_id': 'meme-{}'.format(random.randint(0, 100000)),
-         'meme_url': 'http://static.damnlol.com/pics/61/fd0af9ffb5bf1f13883102e3140e59b0.jpg',
-         'meme_tags': 'bad makeup, makeup fail, indian'
+        {'meme_id': 'meme2.jpg',
+         'meme_tags': 'tag, jpg, funny, wtf'
          },
-        {'meme_id': 'meme-{}'.format(random.randint(0, 100000)),
-         'meme_url': 'https://cdn.pastemagazine.com/www/system/images/photo_albums/harry-potter/large/harry-potter-meme-86.jpg',
-         'meme_tags': 'harry potter, crazy'
+        {'meme_id': 'meme3.jpg',
+         'meme_tags': 'tag, wtf, why me, oh no'
          },
-        {'meme_id': 'meme-{}'.format(random.randint(0, 100000)),
-         'meme_url': 'https://www.writeraccess.com/wp-content/uploads/2014/11/blog-meme.jpg',
-         'meme_tags': 'crazy, memes'
+        {'meme_id': 'meme4.jpg',
+         'meme_tags': 'tag, hilarious, do not mess with me'
          },
-        {'meme_id': 'meme-{}'.format(random.randint(0, 100000)),
-         'meme_url': 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-         'meme_tags': 'pretty, good looking'
-         }
+        {'meme_id': 'meme5.jpg',
+         'meme_tags': 'tag, jpg funny hippo'
+         },
+        {'meme_id': 'meme6.jpg',
+         'meme_tags': 'tag, jpg, fire me fail'
+         },
+        {'meme_id': 'meme7.jpg',
+         'meme_tags': 'tag, jpg failblog crazy times'
+         },
+        {'meme_id': 'meme8.jpg',
+         'meme_tags': 'tag, jpg failure rate make money'
+         },
+        {'meme_id': 'meme9.jpg',
+         'meme_tags': 'tag, jpg on my way waiting on you'
+         },
+        {'meme_id': 'meme10.jpg',
+         'meme_tags': 'tag, jpg great stuff hilarious'
+         },
+        {'meme_id': 'meme11.png',
+         'meme_tags': 'tag, png crying animated'
+         },
+        {'meme_id': 'meme12.png',
+         'meme_tags': 'tag, png why me whoa is me'
+         },
+        {'meme_id': 'meme13.jpg',
+         'meme_tags': 'tag, jpg animated cartoon'
+         },
+        {'meme_id': 'meme14.png',
+         'meme_tags': 'tag, png cry me a river hilarious'
+         },
+        {'meme_id': 'meme15.png',
+         'meme_tags': 'tag, png failure rate is high'
+         },
+
     ]
 
     @classmethod

@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
-import { Text, View } from 'react-native';
-import { Button } from 'react-native-elements';
+import { Text, View, FlatList } from 'react-native';
+import { Button, List, ListItem } from 'react-native-elements';
 
 import Meme from './meme';
 import Search from './search-bar';
@@ -57,7 +57,7 @@ export default class HomeScreen extends React.Component {
             <View style={{flex: 1}}>
 
                 {/* View containing the search and button for uploading a meme */}
-                <View style={{flex: 0.5, paddingTop: '8%'}}>
+                <View style={{paddingTop: '8%'}}>
 
                     {/* Display message if current search doesn't yield any results */}
                     <Text>
@@ -86,21 +86,12 @@ export default class HomeScreen extends React.Component {
                 </View>
 
                 {/* view containing resulting memes based on search */}
-                <View style={{flex: 2, flexDirection: 'row', flexWrap: 'wrap'}}>
-                    {
-                        this.state.searchResults.map((result, i) => {
-                            return (
-                                <Meme
-                                    key={i}
-                                    xlarge
-                                    activeOpacity={0.7}
-                                    source={{uri: result.meme_url}}
-                                    {...this.props}
-                                />
-                            )
-                        })
-                    }
-                </View>
+                <FlatList
+                    numColumns={2}
+                    keyExtractor={(item, index) => item.meme_id}
+                    data={this.state.searchResults}
+                    renderItem={({item}) => <Meme key={item.meme_id} xlarge source={{uri: item.meme_url}} {...this.props}/>}
+                />
 
             </View>
         );
