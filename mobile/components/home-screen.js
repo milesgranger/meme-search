@@ -57,7 +57,7 @@ export default class HomeScreen extends React.Component {
             <View style={{flex: 1}}>
 
                 {/* View containing the search and button for uploading a meme */}
-                <View style={{paddingTop: '8%'}}>
+                <View style={{paddingTop: '5%'}}>
 
                     {/* Display message if current search doesn't yield any results */}
                     <Text>
@@ -87,10 +87,18 @@ export default class HomeScreen extends React.Component {
 
                 {/* view containing resulting memes based on search */}
                 <FlatList
+                    columnWrapperStyle={{alignContent: 'center'}}
                     numColumns={2}
                     keyExtractor={(item, index) => item.meme_id}
                     data={this.state.searchResults}
-                    renderItem={({item}) => <Meme key={item.meme_id} xlarge source={{uri: item.meme_url}} {...this.props}/>}
+                    renderItem={({item}) => (
+                        <Meme
+                            key={item.meme_id}
+                            xlarge
+                            source={{uri: item.meme_url}}
+                            {...this.props}
+                        />
+                    )}
                 />
 
             </View>

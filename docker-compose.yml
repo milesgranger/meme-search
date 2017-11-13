@@ -8,6 +8,7 @@ services:
       context: .
     image: milesg/meme-search-webserver:0.0.1
     container_name: webserver.io
+    restart: always
     links:
       - elasticsearch.io
     ports:

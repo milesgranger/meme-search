@@ -3,6 +3,8 @@ import random
 from elasticsearch import Elasticsearch
 from elasticsearch.helpers import bulk
 
+from server.api_v1.elasticsearch import MemeSearch
+
 
 class SetupElasticSearch:
     """
@@ -28,37 +30,37 @@ class SetupElasticSearch:
          'meme_tags': 'tag, hilarious, do not mess with me'
          },
         {'meme_id': 'meme5.jpg',
-         'meme_tags': 'tag, jpg funny hippo'
+         'meme_tags': 'tag, jpg, funny, hippo'
          },
         {'meme_id': 'meme6.jpg',
-         'meme_tags': 'tag, jpg, fire me fail'
+         'meme_tags': 'tag, jpg, fire me, fail'
          },
         {'meme_id': 'meme7.jpg',
-         'meme_tags': 'tag, jpg failblog crazy times'
+         'meme_tags': 'tag, jpg, failblog, crazy times'
          },
         {'meme_id': 'meme8.jpg',
-         'meme_tags': 'tag, jpg failure rate make money'
+         'meme_tags': 'tag, jpg, failure rate, make money'
          },
         {'meme_id': 'meme9.jpg',
-         'meme_tags': 'tag, jpg on my way waiting on you'
+         'meme_tags': 'tag, jpg, on my way, waiting on you'
          },
         {'meme_id': 'meme10.jpg',
-         'meme_tags': 'tag, jpg great stuff hilarious'
+         'meme_tags': 'tag, jpg great stuff, hilarious'
          },
         {'meme_id': 'meme11.png',
-         'meme_tags': 'tag, png crying animated'
+         'meme_tags': 'tag, png, crying, animated'
          },
         {'meme_id': 'meme12.png',
-         'meme_tags': 'tag, png why me whoa is me'
+         'meme_tags': 'tag, png, why me, whoa is me'
          },
         {'meme_id': 'meme13.jpg',
-         'meme_tags': 'tag, jpg animated cartoon'
+         'meme_tags': 'tag, jpg, animated, cartoon'
          },
         {'meme_id': 'meme14.png',
-         'meme_tags': 'tag, png cry me a river hilarious'
+         'meme_tags': 'tag, png, cry me a river, hilarious'
          },
         {'meme_id': 'meme15.png',
-         'meme_tags': 'tag, png failure rate is high'
+         'meme_tags': 'tag, png, failure rate is high'
          },
 
     ]
@@ -68,6 +70,8 @@ class SetupElasticSearch:
         """
         Load some fake images into elastic search
         """
+
+        # Load memes into memes index
         docs = []  # type: list
         for meme in cls().memes:
             doc = {
@@ -85,4 +89,14 @@ class SetupElasticSearch:
         bulk(es, docs)
 
         es.indices.refresh(index=index_name)
+
+        # Load tags into tags index
+        if es.indices.exists(index='tags'):
+            es.indices.delete(index='tags')
+        es.indices.create(index='tags')
+
+        for meme in cls().memes:
+            for tag in meme.get('meme_tags', '').split(','):
+                MemeSearch(es=es).create_or_update_tag(index='tags', tag=tag.strip())
+        es.indices.refresh(index='tags')
 

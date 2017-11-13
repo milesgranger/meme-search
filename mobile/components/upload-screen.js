@@ -121,7 +121,7 @@ export default class UploadScreen extends React.Component {
         });
 
         // Define uploading endpoint & image to send
-        xhr.open('POST', 'http://192.168.100.9:5556/api-v1/', true);
+        xhr.open('POST', 'http://192.168.100.9:5556/api-v1/?tags=' + this.state.imageTags, true);
         let postData = new FormData();
         postData.append('meme', {
             uri: this.state.selectedImageUri,

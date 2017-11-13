@@ -2,6 +2,7 @@
 from flask import current_app, jsonify, request, abort
 from flask.blueprints import Blueprint
 from flask.views import MethodView
+from werkzeug.datastructures import FileStorage
 
 from server.settings import ES
 from server.api_v1.elasticsearch import MemeSearch
@@ -23,16 +24,27 @@ class MemeSearchAPI(MethodView):
         if 'meme' not in request.files:
             abort(400, 'Invalid post data given')
 
+        # Check that it came with tags
+        tags = request.args.to_dict()
+        current_app.logger.info('Got tags: {}'.format(tags))
+
         # Get the file
         file = request.files['meme']
 
+        current_app.logger.info('File type: {}'.format(type(file)))
+
         # Ensure it is one of the supported file types.
-        allowed_file_types = ['jpg', 'png', 'jpeg', 'bmp']
+        allowed_file_types = ['jpg', 'png', 'jpeg']
         if not any([file.filename.lower().endswith(file_type) for file_type in allowed_file_types]):
-            abort(415, 'Can only accept {} image types.'.format(allowed_file_types))
+            abort(415, 'Can only accept {} image types.'.format(', '.join(allowed_file_types)))
 
         file.save('/workdir/{}'.format(file.filename))
+        current_app.logger.info('Saved image {}'.format(file.filename))
         return jsonify({'status': 'image_saved'})
+
+    def save_meme(self, file, tags: str):
+        pass
+
 
     def get(self):
         """
